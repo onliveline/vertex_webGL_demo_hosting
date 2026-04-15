@@ -72,19 +72,23 @@ if (-not $SkipUnityBuild) {
 # -- 2. Copy WebGL player -----------------------------------------------------
 if (-not $AddressablesOnly) {
     Step "Copying WebGL player..."
-    $buildSrc = Join-Path $unityProject "vertex_webgl_demo_build\Build"
-    $tplSrc   = Join-Path $unityProject "vertex_webgl_demo_build\TemplateData"
-    $idxSrc   = Join-Path $unityProject "vertex_webgl_demo_build\index.html"
+    $buildSrc  = Join-Path $unityProject "vertex_webgl_demo_build\Build"
+    $tplSrc    = Join-Path $unityProject "vertex_webgl_demo_build\TemplateData"
+    $idxSrc    = Join-Path $unityProject "vertex_webgl_demo_build\index.html"
+    $strmSrc   = Join-Path $unityProject "vertex_webgl_demo_build\StreamingAssets"
     if (-not (Test-Path $buildSrc)) { Write-Error "WebGL build not found at $buildSrc. Build in Unity first (OnVR > Bootstrap > Build)."; exit 1 }
     if (-not $DryRun) {
-        if (Test-Path "$repoRoot\Build")        { Remove-Item "$repoRoot\Build" -Recurse -Force }
-        if (Test-Path "$repoRoot\TemplateData") { Remove-Item "$repoRoot\TemplateData" -Recurse -Force }
+        if (Test-Path "$repoRoot\Build")           { Remove-Item "$repoRoot\Build" -Recurse -Force }
+        if (Test-Path "$repoRoot\TemplateData")    { Remove-Item "$repoRoot\TemplateData" -Recurse -Force }
+        if (Test-Path "$repoRoot\StreamingAssets") { Remove-Item "$repoRoot\StreamingAssets" -Recurse -Force }
         Copy-Item $buildSrc "$repoRoot\Build"        -Recurse -Force
         Copy-Item $tplSrc   "$repoRoot\TemplateData" -Recurse -Force
-        if (Test-Path $idxSrc) { Copy-Item $idxSrc "$repoRoot\index.html" -Force }
+        if (Test-Path $idxSrc)  { Copy-Item $idxSrc  "$repoRoot\index.html" -Force }
+        if (Test-Path $strmSrc) { Copy-Item $strmSrc "$repoRoot\StreamingAssets" -Recurse -Force }
         $mb = [math]::Round((Get-ChildItem "$repoRoot\Build" -File | Measure-Object Length -Sum).Sum/1MB,1)
         Write-Host "  Copied Build/ ($mb MB)" -ForegroundColor Green
-    } else { Write-Host "  [DRY RUN] Would copy WebGL build" -ForegroundColor Yellow }
+        if (Test-Path $strmSrc) { Write-Host "  Copied StreamingAssets/ (Addressables catalog)" -ForegroundColor Green }
+    } else { Write-Host "  [DRY RUN] Would copy WebGL build + StreamingAssets" -ForegroundColor Yellow }
 }
 
 # -- 3. Copy Addressables bundles ---------------------------------------------
@@ -122,7 +126,7 @@ if ($DryRun) {
 
 # Stage Build/, TemplateData/, WebGL/, index.html (explicit paths - no `git add .`)
 $paths = @()
-if (-not $AddressablesOnly) { $paths += "Build", "TemplateData", "index.html" }
+if (-not $AddressablesOnly) { $paths += "Build", "TemplateData", "index.html", "StreamingAssets" }
 $paths += "WebGL"
 
 git add -- $paths
