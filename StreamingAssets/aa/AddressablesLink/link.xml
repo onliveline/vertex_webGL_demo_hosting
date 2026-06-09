@@ -3,7 +3,6 @@
     <type fullname="Alyverse.UI.AlyverseRuntimeInteractionEventBridge" preserve="all" />
     <type fullname="Alyverse.UI.AlyverseStoryController" preserve="all" />
     <type fullname="Alyverse.UI.AlyverseStoryHud" preserve="all" />
-    <type fullname="AlyverseUIPulse" preserve="all" />
   </assembly>
   <assembly fullname="com.onvr.warehouse.teleportation, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="OnVR.Warehouse.Teleportation.Mobile.MobileTeleportPoint" preserve="all" />
@@ -22,12 +21,14 @@
     <type fullname="OnVR.Warehouse.FlowSystem.Graph.FlowGraphAsset" preserve="all" />
     <type fullname="OnVR.Warehouse.FlowSystem.Graph.FlowGraphRunner" preserve="all" />
     <type fullname="OnVR.Warehouse.FlowSystem.Graph.FlowEdgeData" preserve="nothing" serialized="true" />
+    <type fullname="OnVR.Warehouse.FlowSystem.Graph.Nodes.CloseActiveFocusNodeData" preserve="nothing" serialized="true" />
     <type fullname="OnVR.Warehouse.FlowSystem.Graph.Nodes.CustomCallbackNodeData" preserve="nothing" serialized="true" />
     <type fullname="OnVR.Warehouse.FlowSystem.Graph.Nodes.EndNodeData" preserve="nothing" serialized="true" />
     <type fullname="OnVR.Warehouse.FlowSystem.Graph.Nodes.SetActiveNodeData" preserve="nothing" serialized="true" />
     <type fullname="OnVR.Warehouse.FlowSystem.Graph.Nodes.SetComponentStateNodeData" preserve="nothing" serialized="true" />
+    <type fullname="OnVR.Warehouse.FlowSystem.Graph.Nodes.SetModalGuardNodeData" preserve="nothing" serialized="true" />
     <type fullname="OnVR.Warehouse.FlowSystem.Graph.Nodes.StartNodeData" preserve="nothing" serialized="true" />
-    <type fullname="OnVR.Warehouse.FlowSystem.Graph.Nodes.WaitForEventNodeData" preserve="nothing" serialized="true" />
+    <type fullname="OnVR.Warehouse.FlowSystem.Graph.Nodes.WaitForFocusTargetNodeData" preserve="nothing" serialized="true" />
     <type fullname="OnVR.Warehouse.FlowSystem.Graph.Nodes.WaitForTeleportNodeData" preserve="nothing" serialized="true" />
     <type fullname="OnVR.Warehouse.FlowSystem.Graph.SceneBinding" preserve="nothing" serialized="true" />
   </assembly>
@@ -38,6 +39,9 @@
   <assembly fullname="OnVR.Warehouse.Localization, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="OnVR.Warehouse.Localization.LocalizedDialogueLoader" preserve="all" />
     <type fullname="OnVR.Warehouse.Localization.LocalizedDialoguePlayer" preserve="all" />
+  </assembly>
+  <assembly fullname="OnVR.Warehouse.UIKit, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="OnVR.Warehouse.UIKit.UIPulse" preserve="all" />
   </assembly>
   <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
     <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
@@ -90,11 +94,11 @@
     <type fullname="TMPro.FaceInfo_Legacy" preserve="nothing" serialized="true" />
     <type fullname="TMPro.FontAssetCreationSettings" preserve="nothing" serialized="true" />
     <type fullname="TMPro.KerningTable" preserve="nothing" serialized="true" />
-    <type fullname="TMPro.LigatureSubstitutionRecord" preserve="nothing" serialized="true" />
     <type fullname="TMPro.TMP_Character" preserve="nothing" serialized="true" />
     <type fullname="TMPro.TMP_FontFeatureTable" preserve="nothing" serialized="true" />
     <type fullname="TMPro.TMP_FontWeightPair" preserve="nothing" serialized="true" />
     <type fullname="TMPro.VertexGradient" preserve="nothing" serialized="true" />
+    <type fullname="TMPro.LigatureSubstitutionRecord" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="Unity.XR.Interaction.Toolkit, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="UnityEngine.XR.Interaction.Toolkit.Locomotion.Teleportation.TeleportationAnchor" preserve="all" />
