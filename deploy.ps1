@@ -72,10 +72,11 @@ if (-not $SkipUnityBuild) {
 # -- 2. Copy WebGL player -----------------------------------------------------
 if (-not $AddressablesOnly) {
     Step "Copying WebGL player..."
-    $buildSrc  = Join-Path $unityProject "vertex_webgl_demo_build\Build"
-    $tplSrc    = Join-Path $unityProject "vertex_webgl_demo_build\TemplateData"
-    $idxSrc    = Join-Path $unityProject "vertex_webgl_demo_build\index.html"
-    $strmSrc   = Join-Path $unityProject "vertex_webgl_demo_build\StreamingAssets"
+    $playerSrc = Join-Path $unityProject "Builds\WebGL"
+    $buildSrc  = Join-Path $playerSrc "Build"
+    $tplSrc    = Join-Path $playerSrc "TemplateData"
+    $idxSrc    = Join-Path $playerSrc "index.html"
+    $strmSrc   = Join-Path $playerSrc "StreamingAssets"
     if (-not (Test-Path $buildSrc)) { Write-Error "WebGL build not found at $buildSrc. Build in Unity first (OnVR > Bootstrap > Build)."; exit 1 }
     if (-not $DryRun) {
         if (Test-Path "$repoRoot\Build")           { Remove-Item "$repoRoot\Build" -Recurse -Force }
