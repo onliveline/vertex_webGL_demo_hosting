@@ -88,7 +88,7 @@ if (-not $AddressablesOnly) {
             Copy-Item $idxSrc "$repoRoot\index.html" -Force
             $indexPath = Join-Path $repoRoot "index.html"
             $indexHtml = Get-Content $indexPath -Raw
-            $indexHtml = $indexHtml.Replace("// config.devicePixelRatio = 1;", "config.devicePixelRatio = 1;")
+            $indexHtml = $indexHtml -replace '(?m)^(\s*)//\s*config\.devicePixelRatio\s*=\s*1;', '$1config.devicePixelRatio = 1;'
             Set-Content $indexPath $indexHtml -NoNewline
         }
         if (Test-Path $strmSrc) { Copy-Item $strmSrc "$repoRoot\StreamingAssets" -Recurse -Force }
