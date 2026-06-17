@@ -84,7 +84,13 @@ if (-not $AddressablesOnly) {
         if (Test-Path "$repoRoot\StreamingAssets") { Remove-Item "$repoRoot\StreamingAssets" -Recurse -Force }
         Copy-Item $buildSrc "$repoRoot\Build"        -Recurse -Force
         Copy-Item $tplSrc   "$repoRoot\TemplateData" -Recurse -Force
-        if (Test-Path $idxSrc)  { Copy-Item $idxSrc  "$repoRoot\index.html" -Force }
+        if (Test-Path $idxSrc)  {
+            Copy-Item $idxSrc "$repoRoot\index.html" -Force
+            $indexPath = Join-Path $repoRoot "index.html"
+            $indexHtml = Get-Content $indexPath -Raw
+            $indexHtml = $indexHtml.Replace("// config.devicePixelRatio = 1;", "config.devicePixelRatio = 1;")
+            Set-Content $indexPath $indexHtml -NoNewline
+        }
         if (Test-Path $strmSrc) { Copy-Item $strmSrc "$repoRoot\StreamingAssets" -Recurse -Force }
         $mb = [math]::Round((Get-ChildItem "$repoRoot\Build" -File | Measure-Object Length -Sum).Sum/1MB,1)
         Write-Host "  Copied Build/ ($mb MB)" -ForegroundColor Green
@@ -103,16 +109,27 @@ if (-not $DryRun) {
     Write-Host "  Copied $((Get-ChildItem $bundleDst -File).Count) bundle files." -ForegroundColor Green
 } else { Write-Host "  [DRY RUN] Would copy $((Get-ChildItem $bundleSrc -File).Count) bundle files." -ForegroundColor Yellow }
 
-# -- 4. Warn about files exceeding GitHub's 100 MB hard limit -----------------
+# -- 4. Enforce GitHub Pages file size limits --------------------------------
+$nearLimit = Get-ChildItem $repoRoot -Recurse -File -ErrorAction SilentlyContinue |
+             Where-Object { $_.Length -ge 90MB -and $_.Length -lt 100MB -and $_.FullName -notmatch '\\\.git\\' }
+if ($nearLimit) {
+    Write-Host ""
+    Write-Host "  WARNING: these files are close to GitHub's 100 MiB per-file hard limit:" -ForegroundColor Yellow
+    $nearLimit | ForEach-Object {
+        Write-Host ("    {0,8:N1} MiB  {1}" -f ($_.Length/1MB), $_.FullName.Substring($repoRoot.Length+1)) -ForegroundColor Yellow
+    }
+}
+
 $oversize = Get-ChildItem $repoRoot -Recurse -File -ErrorAction SilentlyContinue |
-            Where-Object { $_.Length -gt 100MB -and $_.FullName -notmatch '\\\.git\\' }
+            Where-Object { $_.Length -ge 100MB -and $_.FullName -notmatch '\\\.git\\' }
 if ($oversize) {
     Write-Host ""
-    Write-Host "  WARNING: these files exceed GitHub's 100 MB per-file limit and will be rejected:" -ForegroundColor Yellow
+    Write-Host "  ERROR: these files exceed GitHub's 100 MiB per-file limit and will be rejected:" -ForegroundColor Red
     $oversize | ForEach-Object {
-        Write-Host ("    {0,8:N1} MB  {1}" -f ($_.Length/1MB), $_.FullName.Substring($repoRoot.Length+1)) -ForegroundColor Yellow
+        Write-Host ("    {0,8:N1} MiB  {1}" -f ($_.Length/1MB), $_.FullName.Substring($repoRoot.Length+1)) -ForegroundColor Red
     }
-    Write-Host "  Consider enabling Git LFS or reducing asset size." -ForegroundColor Yellow
+    Write-Host "  Reduce or split these files before deploying. Git LFS cannot be used with GitHub Pages sites." -ForegroundColor Red
+    exit 1
 }
 
 # -- 5. Git commit + push -----------------------------------------------------
