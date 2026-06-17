@@ -88,6 +88,21 @@ if (-not $AddressablesOnly) {
             Copy-Item $idxSrc "$repoRoot\index.html" -Force
             $indexPath = Join-Path $repoRoot "index.html"
             $indexHtml = Get-Content $indexPath -Raw
+            $indexHtml = $indexHtml -replace 'var canvas = document\.querySelector\("#unity-canvas"\);', 'var canvas = document.querySelector("#unity-canvas");' + "`r`n      var isMobileBrowser = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);"
+            $indexHtml = $indexHtml -replace '(?s)(\s*)cacheControl:\s*function\s*\(url\)\s*\{.*?\},\s*', '$1'
+            $cacheControl = @'
+        cacheControl: function (url) {
+          if (isMobileBrowser) {
+            return "no-store";
+          }
+          if (url.match(/\.data/) || url.match(/\.bundle/)) {
+            return "must-revalidate";
+          }
+          return "no-store";
+        },
+'@
+            $indexHtml = $indexHtml -replace '(\s*)showBanner:\s*unityShowBanner,', ($cacheControl + '$1showBanner: unityShowBanner,')
+            $indexHtml = $indexHtml -replace '/iPhone\|iPad\|iPod\|Android/i\.test\(navigator\.userAgent\)', 'isMobileBrowser'
             $indexHtml = $indexHtml -replace '(?m)^(\s*)//\s*config\.devicePixelRatio\s*=\s*1;', '$1config.devicePixelRatio = 1;'
             Set-Content $indexPath $indexHtml -NoNewline
         }
