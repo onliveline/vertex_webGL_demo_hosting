@@ -88,7 +88,7 @@ if (-not $AddressablesOnly) {
             Copy-Item $idxSrc "$repoRoot\index.html" -Force
             $indexPath = Join-Path $repoRoot "index.html"
             $indexHtml = Get-Content $indexPath -Raw
-            $indexHtml = $indexHtml -replace 'var canvas = document\.querySelector\("#unity-canvas"\);', 'var canvas = document.querySelector("#unity-canvas");' + "`r`n      var isMobileBrowser = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);"
+            $indexHtml = $indexHtml -replace 'var canvas = document\.querySelector\("#unity-canvas"\);', ('var canvas = document.querySelector("#unity-canvas");' + "`r`n      var isMobileBrowser = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);")
             $indexHtml = $indexHtml -replace '(?s)(\s*)cacheControl:\s*function\s*\(url\)\s*\{.*?\},\s*', '$1'
             $cacheControl = @'
         cacheControl: function (url) {
