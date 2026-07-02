@@ -1,5 +1,8 @@
 <linker>
   <assembly fullname="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="Alyverse.UI.AlyverseFtueControlsHud" preserve="all" />
+    <type fullname="Alyverse.UI.AlyverseInteractionClickHints" preserve="all" />
+    <type fullname="Alyverse.UI.AlyverseResetViewController" preserve="all" />
     <type fullname="Alyverse.UI.AlyverseResponsiveHud" preserve="all" />
     <type fullname="Alyverse.UI.AlyverseRuntimeInteractionEventBridge" preserve="all" />
     <type fullname="Alyverse.UI.AlyverseStoryController" preserve="all" />

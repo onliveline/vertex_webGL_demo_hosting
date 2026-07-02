@@ -25,6 +25,7 @@
     </div>
     <script>
       var canvas = document.querySelector("#unity-canvas");
+      var isMobileBrowser = isMobileBrowser;
 
       // Shows a temporary message banner/ribbon for a few seconds, or
       // a permanent error message on top of the canvas if type=='error'.
@@ -52,16 +53,24 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/BuildVertex.loader.js";
+      var loaderUrl = buildUrl + "/WebGL.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/BuildVertex.data",
-        frameworkUrl: buildUrl + "/BuildVertex.framework.js",
-        codeUrl: buildUrl + "/BuildVertex.wasm",
+        dataUrl: buildUrl + "/WebGL.data",
+        frameworkUrl: buildUrl + "/WebGL.framework.js",
+        codeUrl: buildUrl + "/WebGL.wasm",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "onXT",
         productName: "onXT Vertex Web",
-        productVersion: "0.1.0",
+        productVersion: "0.1.0",        cacheControl: function (url) {
+          if (isMobileBrowser) {
+            return "no-store";
+          }
+          if (url.match(/\.data/) || url.match(/\.bundle/)) {
+            return "must-revalidate";
+          }
+          return "no-store";
+        },
         showBanner: unityShowBanner,
         // errorHandler: function(err, url, line) {
         //    alert("error " + err + " occurred at line " + line);
@@ -87,7 +96,7 @@
       // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
       // expected to change.
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+      if (isMobileBrowser) {
         // Mobile device style: fill the whole browser client area with the game canvas:
 
         var meta = document.createElement('meta');
@@ -99,7 +108,7 @@
 
         // To lower canvas resolution on mobile devices to gain some
         // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
+        config.devicePixelRatio = 1;
 
 
       } else {
