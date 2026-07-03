@@ -85,12 +85,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/1833f69f98dc8e50ec0ad6aff08cf986.loader.js";
+      var loaderUrl = buildUrl + "/4d95fd8aa1beaa4a7d6c7de0c9cc0c24.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/9640bbb9f86e928d728eac87e8ba0752.data.unityweb",
-        frameworkUrl: buildUrl + "/81b7c716c5b9af814f20d7fe15a5dd9d.framework.js.unityweb",
-        codeUrl: buildUrl + "/136c300cfc39137d75a4b939c7748319.wasm.unityweb",
+        dataUrl: buildUrl + "/08a604d39feef01ecb9f24d612406ee3.data.unityweb",
+        frameworkUrl: buildUrl + "/61ebaa95fa4db891f2f28a28dc0c74dc.framework.js.unityweb",
+        codeUrl: buildUrl + "/de4ceb4e8f9a1398079869bbdaa55a2a.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "onXT",
         productName: "onXT Vertex Web",
@@ -135,10 +135,8 @@
         meta.name = 'viewport';
         meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
         document.getElementsByTagName('head')[0].appendChild(meta);
-        document.querySelector("#unity-container").className = "unity-desktop";
-        canvas.className = "";
-        canvas.style.width = fixedCanvasWidth + "px";
-        canvas.style.height = fixedCanvasHeight + "px";
+        document.querySelector("#unity-container").className = "unity-mobile";
+        canvas.className = "unity-mobile";
 
         // To lower canvas resolution on mobile devices to gain some
         // performance, uncomment the following line:
@@ -154,7 +152,7 @@
       document.querySelector("#unity-loading-bar").style.display = "block";
       document.querySelector("#unity-fullscreen-button").style.display = "none";
 
-      config.devicePixelRatio = Math.min(window.devicePixelRatio || 1, 1.5);
+      config.devicePixelRatio = isMobileBrowser ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
 
       var script = document.createElement("script");
       script.src = loaderUrl;
