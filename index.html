@@ -16,7 +16,7 @@
         top: 16px;
         width: min(92vw, 720px);
         transform: translateX(-50%);
-        padding: 14px 18px;
+        padding: 14px 34px 14px 18px;
         border: 1px solid #f0c36d;
         border-radius: 8px;
         background: #fff7db;
@@ -26,12 +26,42 @@
         line-height: 1.45;
         box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
       }
+      #mobile-warning-close {
+        position: absolute;
+        top: 4px;
+        right: 6px;
+        border: none;
+        background: none;
+        padding: 4px 8px;
+        font-size: 20px;
+        line-height: 1;
+        color: #1f2933;
+        cursor: pointer;
+      }
+      #mobile-warning-toggle {
+        display: none;
+        position: fixed;
+        z-index: 10;
+        top: 10px;
+        right: 10px;
+        width: 40px;
+        height: 40px;
+        border: 1px solid #f0c36d;
+        border-radius: 50%;
+        background: #fff7db;
+        font-size: 18px;
+        line-height: 1;
+        cursor: pointer;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      }
     </style>
   </head>
   <body>
     <div id="mobile-browser-warning" role="alert">
+      <button id="mobile-warning-close" aria-label="Hide warning">&#215;</button>
       &#9888;&#65039; This experience is optimized for desktop web browsers and may not function correctly on mobile devices. For the best experience, please open this link on a desktop or laptop computer.
     </div>
+    <button id="mobile-warning-toggle" aria-label="Show warning">&#9888;&#65039;</button>
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width=785 height=441 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
@@ -54,9 +84,19 @@
       var isMobileBrowser = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
         (navigator.userAgent.indexOf("Mac") !== -1 && navigator.maxTouchPoints > 1);
 
+      var mobileWarning = document.querySelector("#mobile-browser-warning");
+      var mobileWarningToggle = document.querySelector("#mobile-warning-toggle");
       if (isMobileBrowser) {
-        document.querySelector("#mobile-browser-warning").style.display = "block";
+        mobileWarning.style.display = "block";
       }
+      document.querySelector("#mobile-warning-close").onclick = function () {
+        mobileWarning.style.display = "none";
+        mobileWarningToggle.style.display = "block";
+      };
+      mobileWarningToggle.onclick = function () {
+        mobileWarning.style.display = "block";
+        mobileWarningToggle.style.display = "none";
+      };
 
 
       // Shows a temporary message banner/ribbon for a few seconds, or
