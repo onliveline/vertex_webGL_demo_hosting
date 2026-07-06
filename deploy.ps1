@@ -88,13 +88,16 @@ if (-not $AddressablesOnly) {
             Copy-Item $idxSrc "$repoRoot\index.html" -Force
             $indexPath = Join-Path $repoRoot "index.html"
             $indexHtml = Get-Content $indexPath -Raw
-            $indexHtml = $indexHtml -replace 'var canvas = document\.querySelector\("#unity-canvas"\);', ('var canvas = document.querySelector("#unity-canvas");' + "`r`n      var isMobileBrowser = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);")
+            # Only inject the declaration when the build's index.html doesn't already
+            # define it (FixedWebGLViewportPostprocessor injects a full version).
+            # Note: the UA regex here deliberately starts with Android so the
+            # 'isMobileBrowser' replacement below cannot mangle this declaration.
+            if ($indexHtml -notmatch 'var isMobileBrowser') {
+                $indexHtml = $indexHtml -replace 'var canvas = document\.querySelector\("#unity-canvas"\);', ('var canvas = document.querySelector("#unity-canvas");' + "`r`n      var isMobileBrowser = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);")
+            }
             $indexHtml = $indexHtml -replace '(?s)(\s*)cacheControl:\s*function\s*\(url\)\s*\{.*?\},\s*', '$1'
             $cacheControl = @'
         cacheControl: function (url) {
-          if (isMobileBrowser) {
-            return "no-store";
-          }
           if (url.match(/\.data/) || url.match(/\.bundle/)) {
             return "must-revalidate";
           }
