@@ -128,16 +128,13 @@
       var loaderUrl = buildUrl + "/4d95fd8aa1beaa4a7d6c7de0c9cc0c24.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/08a604d39feef01ecb9f24d612406ee3.data.unityweb",
-        frameworkUrl: buildUrl + "/61ebaa95fa4db891f2f28a28dc0c74dc.framework.js.unityweb",
-        codeUrl: buildUrl + "/de4ceb4e8f9a1398079869bbdaa55a2a.wasm.unityweb",
+        dataUrl: buildUrl + "/3d7d332da9917938ba85d381fb375296.data.unityweb",
+        frameworkUrl: buildUrl + "/5f9448f6609a12233b35b7d044a6d35a.framework.js.unityweb",
+        codeUrl: buildUrl + "/616801bfae465bd5fe9add00adcf8fa1.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "onXT",
         productName: "onXT Vertex Web",
         productVersion: "0.1.0",        cacheControl: function (url) {
-          if (isMobileBrowser) {
-            return "no-store";
-          }
           if (url.match(/\.data/) || url.match(/\.bundle/)) {
             return "must-revalidate";
           }
@@ -193,6 +190,8 @@
       document.querySelector("#unity-fullscreen-button").style.display = "none";
 
       config.devicePixelRatio = isMobileBrowser ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
+
+      if (navigator.audioSession) navigator.audioSession.type = "playback";
 
       var script = document.createElement("script");
       script.src = loaderUrl;
