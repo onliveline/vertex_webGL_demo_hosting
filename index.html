@@ -10,58 +10,99 @@
       #mobile-browser-warning {
         box-sizing: border-box;
         display: none;
+        align-items: center;
+        gap: 14px;
         position: fixed;
-        z-index: 10;
-        left: 50%;
-        top: 16px;
-        width: min(92vw, 720px);
-        transform: translateX(-50%);
-        padding: 14px 34px 14px 18px;
-        border: 1px solid #f0c36d;
-        border-radius: 8px;
-        background: #fff7db;
-        color: #1f2933;
+        z-index: 2147483646;
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        padding: 14px 16px;
+        border: 1px solid rgba(255,255,255,.24);
+        border-radius: 10px;
+        background: rgba(8,20,24,.94);
+        color: #fff;
         font-family: Arial, Helvetica, sans-serif;
-        font-size: 15px;
-        line-height: 1.45;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+        font-size: 14px;
+        line-height: 1.35;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.36);
       }
-      #mobile-warning-close {
-        position: absolute;
-        top: 4px;
-        right: 6px;
-        border: none;
-        background: none;
-        padding: 4px 8px;
-        font-size: 20px;
+      #mobile-browser-warning span { flex: 1; }
+      #mobile-warning-close,
+      #mobile-warning-toggle {
+        border: 1px solid rgba(255,255,255,.3);
+        border-radius: 999px;
+        background: rgba(255,255,255,.12);
+        color: #fff;
+        min-width: 38px;
+        height: 38px;
+        font-size: 16px;
         line-height: 1;
-        color: #1f2933;
         cursor: pointer;
       }
       #mobile-warning-toggle {
         display: none;
         position: fixed;
-        z-index: 10;
-        top: 10px;
-        right: 10px;
-        width: 40px;
-        height: 40px;
-        border: 1px solid #f0c36d;
-        border-radius: 50%;
-        background: #fff7db;
-        font-size: 18px;
-        line-height: 1;
+        z-index: 2147483645;
+        left: 16px;
+        bottom: 16px;
+        width: 38px;
+        padding: 0;
+      }
+      #rotate-device-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 2147483647;
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 18px;
+        padding: 32px;
+        background: rgba(4,12,16,.96);
+        color: #fff;
+        font-family: Arial, Helvetica, sans-serif;
+        text-align: center;
+      }
+      #rotate-device-overlay .rotate-device-icon {
+        width: 64px;
+        height: 64px;
+        animation: rotate-device-hint 2s ease-in-out infinite;
+      }
+      @keyframes rotate-device-hint {
+        0%, 20% { transform: rotate(0deg); }
+        55%, 80% { transform: rotate(90deg); }
+        100% { transform: rotate(90deg); }
+      }
+      #rotate-device-overlay h2 { margin: 0; font-size: 20px; font-weight: 700; }
+      #rotate-device-overlay p { margin: 0; max-width: 420px; font-size: 14px; line-height: 1.45; color: rgba(255,255,255,.82); }
+      #rotate-device-continue {
+        margin-top: 8px;
+        padding: 10px 22px;
+        border: 1px solid rgba(255,255,255,.3);
+        border-radius: 999px;
+        background: rgba(255,255,255,.12);
+        color: #fff;
+        font-size: 14px;
         cursor: pointer;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
       }
     </style>
   </head>
   <body>
-    <div id="mobile-browser-warning" role="alert">
-      <button id="mobile-warning-close" aria-label="Hide warning">&#215;</button>
-      &#9888;&#65039; This experience is optimized for desktop web browsers and may not function correctly on mobile devices. For the best experience, please open this link on a desktop or laptop computer.
+    <div id="mobile-browser-warning" role="dialog" aria-live="polite" aria-label="Mobile browser warning">
+      <span>This experience is designed for desktop and laptop browsers. On mobile devices it may not run optimally &mdash; landscape mode is recommended.</span>
+      <button id="mobile-warning-close" aria-label="Dismiss mobile browser warning">&#215;</button>
     </div>
-    <button id="mobile-warning-toggle" aria-label="Show warning">&#9888;&#65039;</button>
+    <button id="mobile-warning-toggle" aria-label="Reopen mobile browser warning">i</button>
+    <div id="rotate-device-overlay" role="dialog" aria-label="Rotate device">
+      <svg class="rotate-device-icon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <rect x="22" y="8" width="20" height="48" rx="4" fill="none" stroke="#fff" stroke-width="3"/>
+        <circle cx="32" cy="49" r="2.4" fill="#fff"/>
+      </svg>
+      <h2>Please rotate your device</h2>
+      <p>This experience works best in landscape mode. Turn your device sideways to continue.</p>
+      <button id="rotate-device-continue">Continue in portrait</button>
+    </div>
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width=785 height=441 tabindex="-1"></canvas>
       <div id="unity-loading-bar">
@@ -87,16 +128,56 @@
       var mobileWarning = document.querySelector("#mobile-browser-warning");
       var mobileWarningToggle = document.querySelector("#mobile-warning-toggle");
       if (isMobileBrowser) {
-        mobileWarning.style.display = "block";
+        mobileWarning.style.display = "flex";
       }
       document.querySelector("#mobile-warning-close").onclick = function () {
         mobileWarning.style.display = "none";
         mobileWarningToggle.style.display = "block";
       };
       mobileWarningToggle.onclick = function () {
-        mobileWarning.style.display = "block";
+        mobileWarning.style.display = "flex";
         mobileWarningToggle.style.display = "none";
       };
+
+      if (isMobileBrowser) {
+        // Best effort only: browsers that support it (mostly Android in
+        // fullscreen) will lock, everything else rejects and we fall back
+        // to the rotate overlay below.
+        var tryLockLandscape = function () {
+          try {
+            if (screen.orientation && screen.orientation.lock) {
+              var lockPromise = screen.orientation.lock("landscape");
+              if (lockPromise && lockPromise.catch) lockPromise.catch(function () {});
+            }
+          } catch (e) {}
+        };
+        document.addEventListener("touchend", tryLockLandscape, true);
+        document.addEventListener("click", tryLockLandscape, true);
+        tryLockLandscape();
+
+        var rotateOverlay = document.querySelector("#rotate-device-overlay");
+        var rotateContinue = document.querySelector("#rotate-device-continue");
+        var rotateDismissed = false;
+        try { rotateDismissed = sessionStorage.getItem("vertexRotateDismissed") === "1"; } catch (e) {}
+        var isPortrait = function () {
+          if (screen.orientation && screen.orientation.type) return screen.orientation.type.indexOf("portrait") === 0;
+          return window.innerHeight > window.innerWidth;
+        };
+        var updateRotateOverlay = function () {
+          rotateOverlay.style.display = (isPortrait() && !rotateDismissed) ? "flex" : "none";
+        };
+        rotateContinue.onclick = function () {
+          rotateDismissed = true;
+          try { sessionStorage.setItem("vertexRotateDismissed", "1"); } catch (e) {}
+          updateRotateOverlay();
+        };
+        window.addEventListener("resize", updateRotateOverlay);
+        window.addEventListener("orientationchange", updateRotateOverlay);
+        if (screen.orientation && screen.orientation.addEventListener) {
+          screen.orientation.addEventListener("change", updateRotateOverlay);
+        }
+        updateRotateOverlay();
+      }
 
 
       // Shows a temporary message banner/ribbon for a few seconds, or
@@ -128,7 +209,7 @@
       var loaderUrl = buildUrl + "/4d95fd8aa1beaa4a7d6c7de0c9cc0c24.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/3d7d332da9917938ba85d381fb375296.data.unityweb",
+        dataUrl: buildUrl + "/a1a72d4c07f8a4c6218722723fdd49e3.data.unityweb",
         frameworkUrl: buildUrl + "/5f9448f6609a12233b35b7d044a6d35a.framework.js.unityweb",
         codeUrl: buildUrl + "/616801bfae465bd5fe9add00adcf8fa1.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
