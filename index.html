@@ -270,7 +270,7 @@
       document.querySelector("#unity-loading-bar").style.display = "block";
       document.querySelector("#unity-fullscreen-button").style.display = "none";
 
-      config.devicePixelRatio = isMobileBrowser ? 1 : Math.min(window.devicePixelRatio || 1, 1.5);
+      config.devicePixelRatio = isMobileBrowser ? 1 : (window.devicePixelRatio || 1);
 
       if (navigator.audioSession) navigator.audioSession.type = "playback";
 
