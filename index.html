@@ -209,7 +209,7 @@
       var loaderUrl = buildUrl + "/1ba7c23309011fbafb584d78b02577f5.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/ca8c6aca98ce4263d201e201896a4946.data.unityweb",
+        dataUrl: buildUrl + "/ca7a16641bd123692b5cb7c4fff880eb.data.unityweb",
         frameworkUrl: buildUrl + "/b7105a191be8e243548d341e89263ef1.framework.js.unityweb",
         codeUrl: buildUrl + "/b109bc91b1184ef42e7f4d781f508517.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
@@ -270,7 +270,7 @@
       document.querySelector("#unity-loading-bar").style.display = "block";
       document.querySelector("#unity-fullscreen-button").style.display = "none";
 
-      config.devicePixelRatio = isMobileBrowser ? 1 : (window.devicePixelRatio || 1);
+      config.devicePixelRatio = isMobileBrowser ? 2 : (window.devicePixelRatio || 1);
 
       if (navigator.audioSession) navigator.audioSession.type = "playback";
 
