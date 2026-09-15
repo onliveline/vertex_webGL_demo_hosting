@@ -33,9 +33,12 @@ function Step($msg) { Write-Host "`n>>> $msg" -ForegroundColor Cyan }
 
 # -- 1. Unity headless build (only when NOT skipping) -------------------------
 if (-not $SkipUnityBuild) {
-    $unityExe = Get-ChildItem "C:\Program Files\Unity\Hub\Editor" -Directory |
-                Sort-Object Name -Descending | Select-Object -First 1 |
-                ForEach-Object { Join-Path $_.FullName "Editor\Unity.exe" }
+    $unityExe = "D:\Program Files\Unity\6000.0.59f2\Editor\Unity.exe"
+    if (-not (Test-Path $unityExe)) {
+        $unityExe = Get-ChildItem "C:\Program Files\Unity\Hub\Editor" -Directory |
+                    Sort-Object Name -Descending | Select-Object -First 1 |
+                    ForEach-Object { Join-Path $_.FullName "Editor\Unity.exe" }
+    }
 
     if (-not (Test-Path $unityExe)) { Write-Error "Unity.exe not found. Close Unity and retry, or use -SkipUnityBuild."; exit 1 }
 
@@ -49,7 +52,7 @@ if (-not $SkipUnityBuild) {
         if ($confirm -ne "y") { Write-Host "Cancelled. Close Unity and re-run, or use -SkipUnityBuild."; exit 0 }
     }
 
-    $method = if ($AddressablesOnly) { "BuildPipeline_WebGL.BuildAddressablesOnly" } else { "BuildPipeline_WebGL.BuildAll" }
+    $method = if ($AddressablesOnly) { "WebGLOptimizedBuildPipeline.BuildAddressablesClean" } else { "WebGLOptimizedBuildPipeline.BuildAll" }
     Step "Running Unity headless: $method"
     Write-Host "  Log -> $logFile" -ForegroundColor DarkGray
 
